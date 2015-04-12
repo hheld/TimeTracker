@@ -57,7 +57,7 @@ d3SchedulePlot._drawSchedules = function(el, props, data) {
     .attr("y", function(d) { return d.y; })
     .attr("height", height)
     .attr("width", width)
-    .attr("fill-opacity", 0.5)
+    .attr("fill", "rgb(49, 70, 92)")
     .attr("cursor", "move")
     .call(drag);
 
