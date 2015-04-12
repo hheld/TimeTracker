@@ -1,0 +1,39 @@
+{
+  "name": "TimeTracker",
+  "version": "1.0.0",
+  "description": "Allows the user to track and enter time spent working on projects.",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "."
+  },
+  "keywords": [
+    "TimeTracker"
+  ],
+  "author": "Harald Held",
+  "license": "ISC",
+  "devDependencies": {
+    "browserify": "^9.0.3",
+    "gulp": "^3.8.11",
+    "gulp-html-replace": "^1.4.4",
+    "gulp-streamify": "0.0.5",
+    "gulp-uglify": "^1.1.0",
+    "reactify": "^1.1.0",
+    "vinyl-source-stream": "^1.1.0",
+    "watchify": "^2.6.0"
+  },
+  "dependencies": {
+    "bootstrap": "^3.3.4",
+    "compression": "^1.4.3",
+    "d3": "^3.5.5",
+    "express": "^4.12.3",
+    "flux": "^2.0.1",
+    "keymirror": "^0.1.1",
+    "morgan": "^1.5.2",
+    "object-assign": "^2.0.0",
+    "react": "^0.13.1"
+  }
+}
