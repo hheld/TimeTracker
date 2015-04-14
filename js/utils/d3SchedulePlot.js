@@ -35,93 +35,44 @@ d3SchedulePlot._drawSchedules = function(el, props, data) {
         w        = props.width;
 
     var drag = d3.behavior.drag()
-    .origin(Object)
-    .on("drag", dragmove);
-
-    var dragright = d3.behavior.drag()
-    .origin(Object)
-    .on("drag", rdragresize);
-
-    var dragleft = d3.behavior.drag()
-    .origin(Object)
-    .on("drag", ldragresize);
+        .origin(Object)
+        .on("drag", dragmove);
 
     var svg = d3.select(el).select('svg');
 
-    var newg = svg.append("g")
-      .data([{x: width / 2, y: height / 2}]);
+    var newg = svg.append("g");
 
-    var dragrect = newg.append("rect")
-    .attr("id", "active")
-    .attr("x", function(d) { return d.x; })
-    .attr("y", function(d) { return d.y; })
-    .attr("height", height)
-    .attr("width", width)
-    .attr("fill", "rgb(49, 70, 92)")
-    .attr("cursor", "move")
-    .call(drag);
+    var dragRectGroup = newg.selectAll("rect")
+    .data([{x: width / 2, y: height / 2},
+             {x: 0, y: 50}])
+    .enter()
+    .append("g");
 
-    var dragbarleft = newg.append("rect")
-    .attr("x", function(d) { return d.x - (dragbarw/2); })
-    .attr("y", function(d) { return d.y + (dragbarw/2); })
-    .attr("height", height - dragbarw)
-    .attr("id", "dragleft")
-    .attr("width", dragbarw)
-    .attr("fill", "lightblue")
-    .attr("fill-opacity", 0.5)
-    .attr("cursor", "ew-resize")
-    .call(dragleft);
+    dragRectGroup.append("rect")
+        .attr("class", "scheduleRect")
+        .attr("x", function(d) { return d.x; })
+        .attr("y", function(d) { return d.y; })
+        .attr("height", height)
+        .attr("width", width)
+        .attr("fill", "rgb(49, 70, 92)")
+        .attr("cursor", "move");
 
-    var dragbarright = newg.append("rect")
-    .attr("x", function(d) { return d.x + width - (dragbarw/2); })
-    .attr("y", function(d) { return d.y + (dragbarw/2); })
-    .attr("id", "dragright")
-    .attr("height", height - dragbarw)
-    .attr("width", dragbarw)
-    .attr("fill", "lightblue")
-    .attr("fill-opacity", 0.5)
-    .attr("cursor", "ew-resize")
-    .call(dragright);
+    dragRectGroup.append("rect")
+        .attr("class", "leftDragRect")
+        .attr("x", function(d) { return d.x - 0.5*dragbarw; })
+        .attr("y", function(d) { return d.y; })
+        .attr("height", height)
+        .attr("width", dragbarw)
+        .attr("fill", "rgba(104, 172, 244, 0.69)")
+        .attr("cursor", "ew-resize");
+
+    dragRectGroup.call(drag);
 
     function dragmove(d) {
-        dragrect
+        d3.select(this).select(".scheduleRect")
             .attr("x", d.x = Math.max(0, Math.min(w - width, d3.event.x)));
-        dragbarleft
-            .attr("x", function(d) { return d.x - (dragbarw/2); });
-        dragbarright
-            .attr("x", function(d) { return d.x + width - (dragbarw/2); });
-    }
-
-    function ldragresize(d) {
-        var oldx = d.x;
-        //Max x on the right is x + width - dragbarw
-        //Max x on the left is 0 - (dragbarw/2)
-        d.x = Math.max(0, Math.min(d.x + width - (dragbarw / 2), d3.event.x));
-        width = width + (oldx - d.x);
-
-        dragbarleft
-            .attr("x", function(d) { return d.x - (dragbarw / 2); });
-        dragrect
-            .attr("x", function(d) { return d.x; })
-            .attr("width", width);
-    }
-
-    function rdragresize(d) {
-        //Max x on the left is x - width
-        //Max x on the right is width of screen + (dragbarw/2)
-        var dragx = Math.max(d.x + (dragbarw/2), Math.min(w, d.x + width + d3.event.dx));
-
-        //recalculate width
-        width = dragx - d.x;
-
-        //move the right drag handle
-        dragbarright
-            .attr("x", function(d) { return dragx - (dragbarw/2); });
-
-        //resize the drag rectangle
-        //as we are only resizing from the right, the x coordinate does not need to change
-        dragrect
-            .attr("width", width);
+        d3.select(this).select(".leftDragRect")
+            .attr("x", function(d) { return d.x - 0.5*dragbarw;});
     }
 };
 

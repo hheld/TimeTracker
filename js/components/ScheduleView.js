@@ -13,7 +13,11 @@ var ScheduleView = React.createClass({
                 right: 80,
                 bottom: 30,
                 left: 50
-            }
+            },
+            data: [
+                { from: '0', to: '100' },
+                { from: '300', to: '600'}
+            ]
         };
     },
 
@@ -21,7 +25,7 @@ var ScheduleView = React.createClass({
         return {
             width: this.props.width,
             height: this.props.height,
-            margin: this.props.margin,
+            margin: this.props.margin
         };
     },
 
