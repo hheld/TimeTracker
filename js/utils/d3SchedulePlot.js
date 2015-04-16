@@ -29,8 +29,7 @@ d3SchedulePlot.destroy = function(el) {
 };
 
 d3SchedulePlot._drawSchedules = function(el, props, data) {
-    var width    = 100,
-        height   = 50,
+    var height   = 50,
         dragbarw = 8,
         w        = props.width;
 
@@ -39,12 +38,11 @@ d3SchedulePlot._drawSchedules = function(el, props, data) {
         .on("drag", dragmove);
 
     var svg = d3.select(el).select('svg');
-
     var newg = svg.append("g");
 
     var dragRectGroup = newg.selectAll("rect")
-    .data([{x: width / 2, y: height / 2},
-             {x: 0, y: 50}])
+    .data([{x: 50, y: 0, width: 100},
+           {x: 0, y: height, width: 80}])
     .enter()
     .append("g");
 
@@ -53,7 +51,7 @@ d3SchedulePlot._drawSchedules = function(el, props, data) {
         .attr("x", function(d) { return d.x; })
         .attr("y", function(d) { return d.y; })
         .attr("height", height)
-        .attr("width", width)
+        .attr("width", function(d) { return d.width; })
         .attr("fill", "rgb(49, 70, 92)")
         .attr("cursor", "move");
 
@@ -66,13 +64,48 @@ d3SchedulePlot._drawSchedules = function(el, props, data) {
         .attr("fill", "rgba(104, 172, 244, 0.69)")
         .attr("cursor", "ew-resize");
 
+    dragRectGroup.append("rect")
+        .attr("class", "rightDragRect")
+        .attr("x", function(d) { return d.x + d.width - 0.5*dragbarw; })
+        .attr("y", function(d) { return d.y; })
+        .attr("height", height)
+        .attr("width", dragbarw)
+        .attr("fill", "rgba(104, 172, 244, 0.69)")
+        .attr("cursor", "ew-resize");
+
     dragRectGroup.call(drag);
 
     function dragmove(d) {
-        d3.select(this).select(".scheduleRect")
-            .attr("x", d.x = Math.max(0, Math.min(w - width, d3.event.x)));
-        d3.select(this).select(".leftDragRect")
-            .attr("x", function(d) { return d.x - 0.5*dragbarw;});
+        if(Math.abs(d3.mouse(this)[0] - d3.event.x) <= 0.5*dragbarw) {
+            // left resize handle
+            var oldx = d.x;
+
+            d.x = Math.max(0, Math.min(d.x + d.width - (dragbarw / 2), d3.event.x));
+            d.width = d.width + (oldx - d.x);
+
+            d3.select(this).select(".leftDragRect")
+                .attr("x", function(d) { return d.x - 0.5*dragbarw; });
+            d3.select(this).select(".scheduleRect")
+                .attr("x", function(d) { return d.x; })
+                .attr("width", d.width);
+        } else if(d3.mouse(this)[0] - d.x >= d.width - 0.5*dragbarw) {
+            // right resize handler
+            var dragx = Math.max(d.x + 0.5*dragbarw, Math.min(w, d.x + d.width + d3.event.dx));
+
+            d.width = dragx - d.x;
+
+            d3.select(this).select(".rightDragRect")
+                .attr("x", function(d) { return dragx - 0.5*dragbarw; });
+            d3.select(this).select(".scheduleRect")
+                .attr("width", function(d) { return d.width; });
+        } else {
+            d3.select(this).select(".scheduleRect")
+                .attr("x", d.x = Math.max(0, Math.min(w - d.width, d3.event.x)));
+            d3.select(this).select(".leftDragRect")
+                .attr("x", function(d) { return d.x - 0.5*dragbarw; });
+            d3.select(this).select(".rightDragRect")
+                .attr("x", function(d) { return d.x + d.width - 0.5*dragbarw; });
+        }
     }
 };
 
