@@ -1,0 +1,12 @@
+.axis path,
+.axis line {
+    fill: none;
+    stroke: #000;
+    shape-rendering: crispEdges;
+    font-size: 0.5em;
+}
+
+.x-label,
+.x .tick {
+    font-size: 0.5em;
+}

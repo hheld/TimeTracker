@@ -29,84 +29,43 @@ d3SchedulePlot.destroy = function(el) {
 };
 
 d3SchedulePlot._drawSchedules = function(el, props, data) {
-    var height   = 50,
-        dragbarw = 8,
-        w        = props.width;
+    var w      = props.width,
+        h      = props.height,
+        height = (h - props.margin.bottom) / data.length;
 
-    var drag = d3.behavior.drag()
-        .origin(Object)
-        .on("drag", dragmove);
+    var x = d3.time.scale().range([props.margin.left, w-props.margin.right]);
+
+    var minTime = d3.min(data, function(d) { return d.from; }),
+        maxTime = d3.max(data, function(d) { return d.to; });
+
+    x.domain([minTime, maxTime]);
+
+    var customTimeFormat = d3.time.format("%H:%M");
+    var xAxis = d3.svg.axis()
+                    .scale(x)
+                    .orient("bottom")
+                    .tickFormat(customTimeFormat);
 
     var svg = d3.select(el).select('svg');
     var newg = svg.append("g");
 
-    var dragRectGroup = newg.selectAll("rect")
-    .data([{x: 50, y: 0, width: 100},
-           {x: 0, y: height, width: 80}])
+    var scheduleRectGroup = newg.selectAll("rect")
+    .data(data)
     .enter()
     .append("g");
 
-    dragRectGroup.append("rect")
+    scheduleRectGroup.append("rect")
         .attr("class", "scheduleRect")
-        .attr("x", function(d) { return d.x; })
-        .attr("y", function(d) { return d.y; })
+        .attr("x", function(d) { return x(d.from); })
+        .attr("y", function(d, i) { return i * height; })
         .attr("height", height)
-        .attr("width", function(d) { return d.width; })
-        .attr("fill", "rgb(49, 70, 92)")
-        .attr("cursor", "move");
+        .attr("width", function(d) { return x(d.to) - x(d.from); })
+        .attr("fill", "rgb(49, 70, 92)");
 
-    dragRectGroup.append("rect")
-        .attr("class", "leftDragRect")
-        .attr("x", function(d) { return d.x - 0.5*dragbarw; })
-        .attr("y", function(d) { return d.y; })
-        .attr("height", height)
-        .attr("width", dragbarw)
-        .attr("fill", "rgba(104, 172, 244, 0.69)")
-        .attr("cursor", "ew-resize");
-
-    dragRectGroup.append("rect")
-        .attr("class", "rightDragRect")
-        .attr("x", function(d) { return d.x + d.width - 0.5*dragbarw; })
-        .attr("y", function(d) { return d.y; })
-        .attr("height", height)
-        .attr("width", dragbarw)
-        .attr("fill", "rgba(104, 172, 244, 0.69)")
-        .attr("cursor", "ew-resize");
-
-    dragRectGroup.call(drag);
-
-    function dragmove(d) {
-        if(Math.abs(d3.mouse(this)[0] - d3.event.x) <= 0.5*dragbarw) {
-            // left resize handle
-            var oldx = d.x;
-
-            d.x = Math.max(0, Math.min(d.x + d.width - (dragbarw / 2), d3.event.x));
-            d.width = d.width + (oldx - d.x);
-
-            d3.select(this).select(".leftDragRect")
-                .attr("x", function(d) { return d.x - 0.5*dragbarw; });
-            d3.select(this).select(".scheduleRect")
-                .attr("x", function(d) { return d.x; })
-                .attr("width", d.width);
-        } else if(d3.mouse(this)[0] - d.x >= d.width - 0.5*dragbarw) {
-            // right resize handler
-            var dragx = Math.max(d.x + 0.5*dragbarw, Math.min(w, d.x + d.width + d3.event.dx));
-
-            d.width = dragx - d.x;
-
-            d3.select(this).select(".rightDragRect")
-                .attr("x", function(d) { return dragx - 0.5*dragbarw; });
-            d3.select(this).select(".scheduleRect")
-                .attr("width", function(d) { return d.width; });
-        } else {
-            d3.select(this).select(".scheduleRect")
-                .attr("x", d.x = Math.max(0, Math.min(w - d.width, d3.event.x)));
-            d3.select(this).select(".leftDragRect")
-                .attr("x", function(d) { return d.x - 0.5*dragbarw; });
-            d3.select(this).select(".rightDragRect")
-                .attr("x", function(d) { return d.x + d.width - 0.5*dragbarw; });
-        }
-    }
+    newg.append("g")
+        .attr("class", "x axis")
+        .attr("transform", "translate(0," + (props.height-props.margin.bottom) + ")")
+        .call(xAxis);
 };
 
 module.exports = d3SchedulePlot;

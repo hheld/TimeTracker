@@ -15,8 +15,17 @@ var ScheduleView = React.createClass({
                 left: 50
             },
             data: [
-                { from: '0', to: '100' },
-                { from: '300', to: '600'}
+                {
+                    from: new Date(2015, 03, 14, 8, 0),
+                    to: new Date(2015, 03, 14, 10, 30)
+                }, {
+                    from: new Date(2015, 03, 14, 12, 30),
+                    to: new Date(2015, 03, 14, 17, 0),
+                },
+                {
+                    from: new Date(2015, 03, 14, 10, 30),
+                    to: new Date(2015, 03, 14, 11, 30)
+                }
             ]
         };
     },
