@@ -29,9 +29,14 @@ d3SchedulePlot.destroy = function(el) {
 };
 
 d3SchedulePlot._drawSchedules = function(el, props, data) {
+    var nestedData = d3.nest()
+                        .key(function(d) { return d.project; })
+                        .sortKeys(d3.ascending)
+                        .entries(data);
+
     var w      = props.width,
         h      = props.height,
-        height = (h - props.margin.bottom) / data.length;
+        height = (h - props.margin.bottom) / nestedData.length;
 
     var x = d3.time.scale().range([props.margin.left, w-props.margin.right]);
 
@@ -49,18 +54,31 @@ d3SchedulePlot._drawSchedules = function(el, props, data) {
     var svg = d3.select(el).select('svg');
     var newg = svg.append("g");
 
-    var scheduleRectGroup = newg.selectAll("rect")
-    .data(data)
-    .enter()
-    .append("g");
+    var rowGroup = newg.selectAll("g")
+                        .data(nestedData)
+                        .enter()
+                        .append("g");
+
+    var scheduleRectGroup = rowGroup.selectAll("rect")
+                                .data(function(d, i) { return d.values.map(function(v) { v.row = i; return v; }); })
+                                .enter()
+                                .append("g");
 
     scheduleRectGroup.append("rect")
         .attr("class", "scheduleRect")
         .attr("x", function(d) { return x(d.from); })
-        .attr("y", function(d, i) { return i * height; })
+        .attr("y", function(d) { return d.row * height; })
         .attr("height", height)
         .attr("width", function(d) { return x(d.to) - x(d.from); })
         .attr("fill", "rgb(49, 70, 92)");
+
+    scheduleRectGroup.append("text")
+        .text(function(d) { return d.project; })
+        .attr("x", function(d) { return 0.5*(x(d.from)+x(d.to)); })
+        .attr("y", function(d) { return (d.row+0.5) * height; })
+        .attr("fill", "white")
+        .attr("class", "projectName")
+        .style("text-anchor", "middle");
 
     newg.append("g")
         .attr("class", "x axis")
