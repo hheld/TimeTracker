@@ -50,6 +50,7 @@ var ScheduleView = React.createClass({
         dispatcher.on('click:project', this.onProjectClicked);
 
         this.dispatcher = dispatcher;
+        this.counter = 3;
     },
 
     componentDidUpdate: function(prevProps, prevState) {
@@ -64,9 +65,25 @@ var ScheduleView = React.createClass({
         d3SchedulePlot.destroy(el);
     },
 
+    onClick: function() {
+        var el = this.refs.chart.getDOMNode(),
+            props = this._getProps();
+
+        this.props.data.push({
+            project: 'P ' + this.counter++,
+            from: new Date(2015, 03, 14, 10 + this.counter, 11),
+            to: new Date(2015, 03, 14, 16 + this.counter, 33),
+        });
+
+        d3SchedulePlot.update(el, props, this.props.data, this.dispatcher);
+    },
+
     render: function() {
         return(
-            <div ref='chart' />
+            <div>
+                <div ref='chart' />
+                <button onClick={this.onClick}>Add project</button>
+            </div>
         );
     },
 

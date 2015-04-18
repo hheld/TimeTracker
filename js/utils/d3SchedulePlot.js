@@ -57,41 +57,45 @@ d3SchedulePlot._drawSchedules = function(el, props, data, dispatcher) {
                     .tickFormat(customTimeFormat);
 
     var svg = d3.select(el).select('svg');
-    var newg = svg.append("g");
+    var rowGroup = svg.selectAll(".projectRow")
+                        .data(nestedData);
 
-    var rowGroup = newg.selectAll("g")
-                        .data(nestedData)
-                        .enter()
-                        .append("g");
+    rowGroup.enter()
+        .append("g")
+        .attr("class", "projectRow");
 
-    var scheduleRectGroup = rowGroup.selectAll("rect")
-                                .data(function(d, i) { return d.values.map(function(v) { v.row = i; return v; }); })
-                                .enter()
-                                .append("g")
-                                .on('click', function(d) {
-                                    dispatcher.emit('click:project', d);
-                                });
+    var scheduleRectGroup = rowGroup.selectAll(".scheduleRect")
+                                .data(function(d, i) { return d.values.map(function(v) { v.row = i; return v; }); });
 
-    scheduleRectGroup.append("rect")
-        .attr("class", "scheduleRect")
+    scheduleRectGroup.enter()
+        .append("rect").attr("class", "scheduleRect")
+        .on('click', function(d) {
+            dispatcher.emit('click:project', d);
+        });
+
+    scheduleRectGroup
         .attr("x", function(d) { return x(d.from); })
         .attr("y", function(d) { return d.row * height; })
         .attr("height", height)
         .attr("width", function(d) { return x(d.to) - x(d.from); })
         .attr("fill", "rgb(49, 70, 92)");
 
-    scheduleRectGroup.append("text")
-        .text(function(d) { return d.project; })
-        .attr("x", function(d) { return 0.5*(x(d.from)+x(d.to)); })
-        .attr("y", function(d) { return (d.row+0.5) * height; })
-        .attr("fill", "white")
-        .attr("class", "projectName")
-        .style("text-anchor", "middle");
+    rowGroup.exit()
+        .remove();
 
-    newg.append("g")
-        .attr("class", "x axis")
+    scheduleRectGroup.exit()
+        .remove();
+
+    var xa = svg.selectAll(".x.axis").data([0]);
+    xa.enter()
+        .append("g");
+
+    xa.attr("class", "x axis")
         .attr("transform", "translate(0," + (props.height-props.margin.bottom) + ")")
         .call(xAxis);
+
+    xa.exit()
+        .remove();
 };
 
 module.exports = d3SchedulePlot;
