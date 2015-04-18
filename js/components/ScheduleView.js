@@ -45,14 +45,18 @@ var ScheduleView = React.createClass({
         var el = this.refs.chart.getDOMNode(),
             props = this._getProps();
 
-        d3SchedulePlot.create(el, props, this.props.data);
+        var dispatcher = d3SchedulePlot.create(el, props, this.props.data);
+
+        dispatcher.on('click:project', this.onProjectClicked);
+
+        this.dispatcher = dispatcher;
     },
 
     componentDidUpdate: function(prevProps, prevState) {
         var el = this.refs.chart.getDOMNode(),
             props = this._getProps();
 
-        d3SchedulePlot.update(el, props,this.props.data);
+        d3SchedulePlot.update(el, props, this.props.data, this.dispatcher);
     },
 
     componentWillUnmount: function() {
@@ -64,6 +68,10 @@ var ScheduleView = React.createClass({
         return(
             <div ref='chart' />
         );
+    },
+
+    onProjectClicked: function(d) {
+        console.log('Clicked on project:', d);
     }
 });
 

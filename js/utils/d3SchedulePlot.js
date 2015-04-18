@@ -1,6 +1,7 @@
 /* jshint node: true */
 
-var d3 = require('d3');
+var d3 = require('d3'),
+    EventEmitter = require('events').EventEmitter;
 
 var d3SchedulePlot = {};
 
@@ -17,18 +18,22 @@ d3SchedulePlot.create = function(el, props, data) {
                 .attr('width', width + margin.left + margin.right)
                 .attr('height', height + margin.top + margin.bottom);
 
-    this.update(el, props, data);
+    var dispatcher = new EventEmitter();
+
+    this.update(el, props, data, dispatcher);
+
+    return dispatcher;
 };
 
-d3SchedulePlot.update = function(el, props, data) {
-    this._drawSchedules(el, props, data);
+d3SchedulePlot.update = function(el, props, data, dispatcher) {
+    this._drawSchedules(el, props, data, dispatcher);
 };
 
 d3SchedulePlot.destroy = function(el) {
     d3.select(el).selectAll('*').remove();
 };
 
-d3SchedulePlot._drawSchedules = function(el, props, data) {
+d3SchedulePlot._drawSchedules = function(el, props, data, dispatcher) {
     var nestedData = d3.nest()
                         .key(function(d) { return d.project; })
                         .sortKeys(d3.ascending)
@@ -62,7 +67,10 @@ d3SchedulePlot._drawSchedules = function(el, props, data) {
     var scheduleRectGroup = rowGroup.selectAll("rect")
                                 .data(function(d, i) { return d.values.map(function(v) { v.row = i; return v; }); })
                                 .enter()
-                                .append("g");
+                                .append("g")
+                                .on('click', function(d) {
+                                    dispatcher.emit('click:project', d);
+                                });
 
     scheduleRectGroup.append("rect")
         .attr("class", "scheduleRect")
