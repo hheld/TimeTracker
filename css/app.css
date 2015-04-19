@@ -12,6 +12,17 @@
     font-family: sans-serif;
 }
 
+.y-label,
+.y .tick {
+    font-size: 0.7em;
+    font-family: sans-serif;
+}
+
+.y.axis path,
+.y.axis line {
+    stroke: none;
+}
+
 .projectName {
     font-family: sans-serif;
     font-size: 0.8em;

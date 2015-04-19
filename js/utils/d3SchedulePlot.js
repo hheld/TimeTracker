@@ -21,6 +21,9 @@ d3SchedulePlot.create = function(el, props, data) {
     svg.append("g")
         .attr("class", "x axis");
 
+    svg.append("g")
+        .attr("class", "y axis");
+
     var dispatcher = new EventEmitter();
 
     this.update(el, props, data, dispatcher);
@@ -53,11 +56,31 @@ d3SchedulePlot._scales = function(el, props, data) {
                     .orient("bottom")
                     .tickFormat(customTimeFormat);
 
-    xa.attr("transform", "translate(0," + (props.height-props.margin.bottom) + ")")
+    xa.transition()
+        .attr("transform", "translate(0," + (props.height-props.margin.bottom) + ")")
         .call(xAxis);
 
+    var ya = d3.select(el).select(".y.axis");
+    var nestedData = d3.nest()
+                        .key(function(d) { return d.project; })
+                        .sortKeys(d3.ascending)
+                        .entries(data);
+
+    var y = d3.scale.ordinal()
+                .rangePoints([0, props.height - props.margin.bottom], 1)
+                .domain(nestedData.map(function(d) { return d.key; }));
+
+    var yAxis = d3.svg.axis()
+                    .scale(y)
+                    .orient("left");
+
+    ya.transition()
+        .attr("transform", "translate(" + props.margin.left + ",0)")
+        .call(yAxis);
+
     return {
-        x: x
+        x: x,
+        y: y
     };
 };
 
@@ -83,7 +106,8 @@ d3SchedulePlot._drawSchedules = function(el, props, data, dispatcher, scales) {
                                 .data(function(d, i) { return d.values.map(function(v) { v.row = i; return v; }); });
 
     scheduleRectGroup.enter()
-        .append("rect").attr("class", "scheduleRect")
+        .append("rect")
+        .attr("class", "scheduleRect")
         .on('click', function(d) {
             dispatcher.emit('click:project', d);
         });
