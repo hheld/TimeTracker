@@ -67,7 +67,7 @@ d3SchedulePlot._scales = function(el, props, data) {
                         .entries(data);
 
     var y = d3.scale.ordinal()
-                .rangePoints([0, props.height - props.margin.bottom], 1)
+                .rangePoints([0, props.height - props.margin.bottom - props.margin.top], 1)
                 .domain(nestedData.map(function(d) { return d.key; }));
 
     var yAxis = d3.svg.axis()
@@ -75,7 +75,7 @@ d3SchedulePlot._scales = function(el, props, data) {
                     .orient("left");
 
     ya.transition()
-        .attr("transform", "translate(" + props.margin.left + ",0)")
+        .attr("transform", "translate(" + props.margin.left + "," + props.margin.top + ")")
         .call(yAxis);
 
     return {
@@ -92,7 +92,7 @@ d3SchedulePlot._drawSchedules = function(el, props, data, dispatcher, scales) {
 
     var w      = props.width,
         h      = props.height,
-        height = (h - props.margin.bottom) / nestedData.length;
+        height = (h - props.margin.bottom - props.margin.top) / nestedData.length;
 
     var svg = d3.select(el).select('svg');
     var rowGroup = svg.selectAll(".projectRow")
@@ -100,6 +100,7 @@ d3SchedulePlot._drawSchedules = function(el, props, data, dispatcher, scales) {
 
     rowGroup.enter()
         .append("g")
+        .attr("transform", "translate(0," + props.margin.top + ")")
         .attr("class", "projectRow");
 
     var scheduleRectGroup = rowGroup.selectAll(".scheduleRect")
