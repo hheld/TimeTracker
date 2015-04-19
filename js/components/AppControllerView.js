@@ -7,7 +7,7 @@ var React            = require('react'),
 
 function getAppState() {
     return {
-        projectTimes: ProjectTimeStore.allTimes()
+        timeBlocks: ProjectTimeStore.timeBlocks()
     };
 }
 
@@ -34,7 +34,7 @@ var AppControllerView = React.createClass({
 
     render: function() {
         return(
-            <ScheduleView data={this.state.projectTimes}/>
+            <ScheduleView data={this.state.timeBlocks}/>
         );
     }
 });

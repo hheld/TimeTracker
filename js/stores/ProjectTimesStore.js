@@ -1,12 +1,12 @@
 /* jshint node: true */
 
 var AppDispatcher = require('../dispatcher/AppDispatcher'),
-    AppConstants  = require('../constants/AppConstants'),
-    EventEmitter  = require('events').EventEmitter,
-    merge         = require('object-assign');
+AppConstants  = require('../constants/AppConstants'),
+EventEmitter  = require('events').EventEmitter,
+merge         = require('object-assign');
 
-var _store = [
-    {
+var _store = {
+    timeBlocks: [{
         project: 'P 1',
         from: new Date(2015, 03, 14, 8, 0),
         to: new Date(2015, 03, 14, 10, 30)
@@ -19,8 +19,12 @@ var _store = [
         project: 'P 1',
         from: new Date(2015, 03, 14, 12, 30),
         to: new Date(2015, 03, 14, 17, 0),
-    }
-];
+    }],
+    projectNames: [
+        'P 1',
+        'P 2'
+    ]
+};
 
 var ProjectTimeStore = merge({}, EventEmitter.prototype, {
     emitChange: function() {
@@ -35,8 +39,12 @@ var ProjectTimeStore = merge({}, EventEmitter.prototype, {
         this.removeListener('change', callback);
     },
 
-    allTimes: function() {
-        return _store;
+    timeBlocks: function() {
+        return _store.timeBlocks;
+    },
+
+    projectNames: function() {
+        return _store.projectNames;
     }
 });
 
@@ -45,7 +53,7 @@ ProjectTimeStore.dispatcherToken = AppDispatcher.register(function(payload) {
 
     switch(action.actionType) {
         default:
-            return true;
+        return true;
     }
 
     ProjectTimeStore.emitChange();

@@ -11,6 +11,7 @@ app.use(morgan('short'));
 
 app.use(compression());
 app.use('/', express.static(path.join(__dirname, '/dist')));
+app.use('/', express.static(path.join(__dirname, '/node_modules')));
 
 app.listen(port);
 console.log('Started server on port ' + port);
