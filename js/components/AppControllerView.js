@@ -1,13 +1,15 @@
 /* jshint node: true */
 
-var React            = require('react'),
-    AppStore         = require('../stores/AppStore'),
-    ProjectTimeStore = require('../stores/ProjectTimesStore'),
-    ScheduleView     = require('./ScheduleView');
+var React                  = require('react'),
+    AppStore               = require('../stores/AppStore'),
+    ProjectTimeStore       = require('../stores/ProjectTimesStore'),
+    ScheduleView           = require('./ScheduleView'),
+    ExistingProjectSelector = require('./ExistingProjectSelector');
 
 function getAppState() {
     return {
-        timeBlocks: ProjectTimeStore.timeBlocks()
+        timeBlocks: ProjectTimeStore.timeBlocks(),
+        projectNames: ProjectTimeStore.projectNames()
     };
 }
 
@@ -34,7 +36,10 @@ var AppControllerView = React.createClass({
 
     render: function() {
         return(
-            <ScheduleView data={this.state.timeBlocks}/>
+            <div>
+                <ScheduleView data={this.state.timeBlocks}/>
+                <ExistingProjectSelector projectNames={this.state.projectNames} />
+            </div>
         );
     }
 });

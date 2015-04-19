@@ -1,9 +1,9 @@
 /* jshint node: true */
 
 var AppDispatcher = require('../dispatcher/AppDispatcher'),
-AppConstants  = require('../constants/AppConstants'),
-EventEmitter  = require('events').EventEmitter,
-merge         = require('object-assign');
+    AppConstants  = require('../constants/AppConstants'),
+    EventEmitter  = require('events').EventEmitter,
+    merge         = require('object-assign');
 
 var _store = {
     timeBlocks: [{
@@ -22,7 +22,8 @@ var _store = {
     }],
     projectNames: [
         'P 1',
-        'P 2'
+        'P 2',
+        'P 3'
     ]
 };
 
