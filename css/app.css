@@ -27,3 +27,7 @@
     font-family: sans-serif;
     font-size: 0.8em;
 }
+
+.scheduleRect {
+    fill: rgb(84, 156, 227);
+}
