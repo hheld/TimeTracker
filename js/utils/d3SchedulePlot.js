@@ -74,6 +74,7 @@ d3SchedulePlot._drawSchedules = function(el, props, data, dispatcher) {
         });
 
     scheduleRectGroup
+        .transition()
         .attr("x", function(d) { return x(d.from); })
         .attr("y", function(d) { return d.row * height; })
         .attr("height", height)

@@ -65,7 +65,7 @@ var ScheduleView = React.createClass({
         d3SchedulePlot.destroy(el);
     },
 
-    onClick: function() {
+    onClickAdd: function() {
         var el = this.refs.chart.getDOMNode(),
             props = this._getProps();
 
@@ -78,11 +78,21 @@ var ScheduleView = React.createClass({
         d3SchedulePlot.update(el, props, this.props.data, this.dispatcher);
     },
 
+    onClickRemove: function() {
+        var el = this.refs.chart.getDOMNode(),
+            props = this._getProps();
+
+        this.props.data.pop();
+
+        d3SchedulePlot.update(el, props, this.props.data, this.dispatcher);
+    },
+
     render: function() {
         return(
             <div>
                 <div ref='chart' />
-                <button onClick={this.onClick}>Add project</button>
+                <button onClick={this.onClickAdd}>Add project</button>
+                <button onClick={this.onClickRemove}>Remove project</button>
             </div>
         );
     },
