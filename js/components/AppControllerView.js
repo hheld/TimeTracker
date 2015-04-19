@@ -1,11 +1,13 @@
 /* jshint node: true */
 
-var React        = require('react'),
-    AppStore     = require('../stores/AppStore'),
-    ScheduleView = require('./ScheduleView');
+var React            = require('react'),
+    AppStore         = require('../stores/AppStore'),
+    ProjectTimeStore = require('../stores/ProjectTimesStore'),
+    ScheduleView     = require('./ScheduleView');
 
 function getAppState() {
     return {
+        projectTimes: ProjectTimeStore.allTimes()
     };
 }
 
@@ -17,11 +19,13 @@ var AppControllerView = React.createClass({
     componentDidMount: function() {
         // add change listeners for relevant stores
         AppStore.addChangeListener(this._onChange);
+        ProjectTimeStore.addChangeListener(this._onChange);
     },
 
     componentWillUnmount: function() {
         // remove change listeners for relevant stores
         AppStore.removeChangeListener(this._onChange);
+        ProjectTimeStore.removeChangeListener(this._onChange);
     },
 
     _onChange: function() {
@@ -29,25 +33,8 @@ var AppControllerView = React.createClass({
     },
 
     render: function() {
-        var data = [
-            {
-                project: 'P 1',
-                from: new Date(2015, 03, 14, 8, 0),
-                to: new Date(2015, 03, 14, 10, 30)
-            },
-            {
-                project: 'P 2',
-                from: new Date(2015, 03, 14, 10, 30),
-                to: new Date(2015, 03, 14, 11, 30)
-            }, {
-                project: 'P 1',
-                from: new Date(2015, 03, 14, 12, 30),
-                to: new Date(2015, 03, 14, 17, 0),
-            }
-        ];
-
         return(
-            <ScheduleView data={data}/>
+            <ScheduleView data={this.state.projectTimes}/>
         );
     }
 });
