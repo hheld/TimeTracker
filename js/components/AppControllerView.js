@@ -29,8 +29,25 @@ var AppControllerView = React.createClass({
     },
 
     render: function() {
+        var data = [
+            {
+                project: 'P 1',
+                from: new Date(2015, 03, 14, 8, 0),
+                to: new Date(2015, 03, 14, 10, 30)
+            },
+            {
+                project: 'P 2',
+                from: new Date(2015, 03, 14, 10, 30),
+                to: new Date(2015, 03, 14, 11, 30)
+            }, {
+                project: 'P 1',
+                from: new Date(2015, 03, 14, 12, 30),
+                to: new Date(2015, 03, 14, 17, 0),
+            }
+        ];
+
         return(
-            <ScheduleView />
+            <ScheduleView data={data}/>
         );
     }
 });

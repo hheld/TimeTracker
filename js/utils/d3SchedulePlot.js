@@ -60,6 +60,10 @@ d3SchedulePlot._scales = function(el, props, data) {
         .attr("transform", "translate(0," + (props.height-props.margin.bottom) + ")")
         .call(xAxis);
 
+    if(data.length===0) {
+        xa.attr("opacity", 0);
+    }
+
     var ya = d3.select(el).select(".y.axis");
     var nestedData = d3.nest()
                         .key(function(d) { return d.project; })
