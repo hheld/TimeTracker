@@ -18,6 +18,9 @@ d3SchedulePlot.create = function(el, props, data) {
                 .attr('width', width + margin.left + margin.right)
                 .attr('height', height + margin.top + margin.bottom);
 
+    svg.append("g")
+        .attr("class", "x axis");
+
     var dispatcher = new EventEmitter();
 
     this.update(el, props, data, dispatcher);
@@ -26,24 +29,18 @@ d3SchedulePlot.create = function(el, props, data) {
 };
 
 d3SchedulePlot.update = function(el, props, data, dispatcher) {
-    this._drawSchedules(el, props, data, dispatcher);
+    var scales = this._scales(el, props, data);
+    this._drawSchedules(el, props, data, dispatcher, scales);
 };
 
 d3SchedulePlot.destroy = function(el) {
     d3.select(el).selectAll('*').remove();
 };
 
-d3SchedulePlot._drawSchedules = function(el, props, data, dispatcher) {
-    var nestedData = d3.nest()
-                        .key(function(d) { return d.project; })
-                        .sortKeys(d3.ascending)
-                        .entries(data);
+d3SchedulePlot._scales = function(el, props, data) {
+    var xa = d3.select(el).select(".x.axis");
 
-    var w      = props.width,
-        h      = props.height,
-        height = (h - props.margin.bottom) / nestedData.length;
-
-    var x = d3.time.scale().range([props.margin.left, w-props.margin.right]);
+    var x = d3.time.scale().range([props.margin.left, props.width-props.margin.right]);
 
     var minTime = d3.min(data, function(d) { return d.from; }),
         maxTime = d3.max(data, function(d) { return d.to; });
@@ -55,6 +52,24 @@ d3SchedulePlot._drawSchedules = function(el, props, data, dispatcher) {
                     .scale(x)
                     .orient("bottom")
                     .tickFormat(customTimeFormat);
+
+    xa.attr("transform", "translate(0," + (props.height-props.margin.bottom) + ")")
+        .call(xAxis);
+
+    return {
+        x: x
+    };
+};
+
+d3SchedulePlot._drawSchedules = function(el, props, data, dispatcher, scales) {
+    var nestedData = d3.nest()
+                        .key(function(d) { return d.project; })
+                        .sortKeys(d3.ascending)
+                        .entries(data);
+
+    var w      = props.width,
+        h      = props.height,
+        height = (h - props.margin.bottom) / nestedData.length;
 
     var svg = d3.select(el).select('svg');
     var rowGroup = svg.selectAll(".projectRow")
@@ -75,27 +90,16 @@ d3SchedulePlot._drawSchedules = function(el, props, data, dispatcher) {
 
     scheduleRectGroup
         .transition()
-        .attr("x", function(d) { return x(d.from); })
+        .attr("x", function(d) { return scales.x(d.from); })
         .attr("y", function(d) { return d.row * height; })
         .attr("height", height)
-        .attr("width", function(d) { return x(d.to) - x(d.from); })
+        .attr("width", function(d) { return scales.x(d.to) - scales.x(d.from); })
         .attr("fill", "rgb(49, 70, 92)");
 
     rowGroup.exit()
         .remove();
 
     scheduleRectGroup.exit()
-        .remove();
-
-    var xa = svg.selectAll(".x.axis").data([0]);
-    xa.enter()
-        .append("g");
-
-    xa.attr("class", "x axis")
-        .attr("transform", "translate(0," + (props.height-props.margin.bottom) + ")")
-        .call(xAxis);
-
-    xa.exit()
         .remove();
 };
 
