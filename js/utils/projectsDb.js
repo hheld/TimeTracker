@@ -33,13 +33,30 @@ function upsertProject(project) {
 function find(query) {
     return new Promise(function(resolve, reject) {
         init().then(function(db) {
-            resolve(db.projects.find({from: {$gt: query.from, $lt: query.to},
-                                      to:   {$gt: query.from, $lt: query.to}}));
+            resolve(db.projects.find({ from: { $gt: query.from, $lt: query.to },
+                                       to:   { $gt: query.from, $lt: query.to } }));
+        });
+    });
+}
+
+function allProjectNames() {
+    return new Promise(function(resolve, reject) {
+        init().then(function(db) {
+            var allProjectNames = [];
+
+            db.projects.find({}, { name: 1 }).fetch(function(success, error) {
+                for(var i=0, len=success.length; i<len; ++i) {
+                    allProjectNames.push(success[i].name);
+                }
+
+                resolve(allProjectNames);
+            });
         });
     });
 }
 
 module.exports = {
     upsert: upsertProject,
-    find: find
+    find: find,
+    allProjectNames: allProjectNames
 };
