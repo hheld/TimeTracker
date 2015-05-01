@@ -8,4 +8,3 @@ React.render(
     <AppControllerView></AppControllerView>,
     document.getElementById('mount-point')
 );
-
