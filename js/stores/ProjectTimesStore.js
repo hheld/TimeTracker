@@ -3,29 +3,34 @@
 var AppDispatcher = require('../dispatcher/AppDispatcher'),
     AppConstants  = require('../constants/AppConstants'),
     EventEmitter  = require('events').EventEmitter,
-    merge         = require('object-assign');
+    merge         = require('object-assign'),
+    pdb           = require('../utils/projectsDb');
 
 var _store = {
-    timeBlocks: [{
-        project: 'P 1',
-        from: new Date(2015, 03, 14, 8, 0),
-        to: new Date(2015, 03, 14, 10, 30)
-    },
-    {
-        project: 'P 2',
-        from: new Date(2015, 03, 14, 10, 30),
-        to: new Date(2015, 03, 14, 11, 30)
-    }, {
-        project: 'P 1',
-        from: new Date(2015, 03, 14, 12, 30),
-        to: new Date(2015, 03, 14, 17, 0),
-    }],
-    projectNames: [
-        'P 1',
-        'P 2',
-        'P 3'
-    ]
+    from: new Date(2015, 3, 1),
+    to: new Date(2015, 3, 1, 18),
+    timeBlocks: [],
+    projectNames: []
 };
+
+function _fetchProjectDataFromDb() {
+    pdb.find({ from: _store.from,
+              to: _store.to })
+        .then(function(res) {
+        res.fetch(function(success, error) {
+            _store.timeBlocks = success;
+            ProjectTimeStore.emitChange();
+        });
+    });
+}
+
+function _fetchAllProjectNamesFromDb() {
+    pdb.allProjectNames()
+        .then(function(res) {
+        _store.projectNames = res;
+        ProjectTimeStore.emitChange();
+    });
+}
 
 var ProjectTimeStore = merge({}, EventEmitter.prototype, {
     emitChange: function() {
@@ -53,6 +58,10 @@ ProjectTimeStore.dispatcherToken = AppDispatcher.register(function(payload) {
     var action = payload.action;
 
     switch(action.actionType) {
+        case AppConstants.INIT_FROM_DB:
+            _fetchProjectDataFromDb();
+            _fetchAllProjectNamesFromDb();
+            return true;
         default:
         return true;
     }

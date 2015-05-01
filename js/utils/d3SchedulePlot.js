@@ -62,6 +62,8 @@ d3SchedulePlot._scales = function(el, props, data) {
 
     if(data.length===0) {
         xa.attr("opacity", 0);
+    } else {
+        xa.attr("opacity", 1);
     }
 
     var ya = d3.select(el).select(".y.axis");
