@@ -4,11 +4,12 @@ var AppDispatcher = require('../dispatcher/AppDispatcher'),
     AppConstants  = require('../constants/AppConstants'),
     EventEmitter  = require('events').EventEmitter,
     merge         = require('object-assign'),
-    pdb           = require('../utils/projectsDb');
+    pdb           = require('../utils/projectsDb'),
+    moment        = require('moment');
 
 var _store = {
-    from: new Date(2015, 3, 1),
-    to: new Date(2015, 3, 1, 18),
+    from: moment().startOf('day').toDate(),
+    to: moment().endOf('day').toDate(),
     timeBlocks: [],
     projectNames: []
 };
