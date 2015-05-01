@@ -12,13 +12,13 @@ React.render(
 var pdb = require('./utils/projectsDb');
 
 var p1 = {
-    name: 'P 1',
+    project: 'P 1',
     from: new Date(2015, 3, 1,  8,  0),
     to:   new Date(2015, 3, 1, 11, 30)
 };
 
 var p2 = {
-    name: 'P 2',
+    project: 'P 2',
     from: new Date(2015, 3, 1, 12, 30),
     to:   new Date(2015, 3, 1, 17,  0)
 };

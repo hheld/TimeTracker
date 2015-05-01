@@ -17,7 +17,7 @@ function init() {
 function upsertProject(project) {
     return new Promise(function(resolve, reject) {
         init().then(function(db) {
-            db.projects.findOne({ name: project.name, from: project.from, to: project.to }, {}, function(res) {
+            db.projects.findOne({ project: project.project, from: project.from, to: project.to }, {}, function(res) {
                 if(res) {
                     project._id = res._id;
                 }
@@ -44,9 +44,9 @@ function allProjectNames() {
         init().then(function(db) {
             var allProjectNames = [];
 
-            db.projects.find({}, { name: 1 }).fetch(function(success, error) {
+            db.projects.find({}, { project: 1 }).fetch(function(success, error) {
                 for(var i=0, len=success.length; i<len; ++i) {
-                    allProjectNames.push(success[i].name);
+                    allProjectNames.push(success[i].project);
                 }
 
                 resolve(allProjectNames);
