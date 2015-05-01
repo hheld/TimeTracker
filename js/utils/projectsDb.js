@@ -30,6 +30,16 @@ function upsertProject(project) {
     });
 }
 
+function find(query) {
+    return new Promise(function(resolve, reject) {
+        init().then(function(db) {
+            resolve(db.projects.find({from: {$gt: query.from, $lt: query.to},
+                                      to:   {$gt: query.from, $lt: query.to}}));
+        });
+    });
+}
+
 module.exports = {
-    upsert: upsertProject
+    upsert: upsertProject,
+    find: find
 };
