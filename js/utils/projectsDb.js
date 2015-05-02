@@ -46,7 +46,9 @@ function allProjectNames() {
 
             db.projects.find({}, { project: 1 }).fetch(function(success, error) {
                 for(var i=0, len=success.length; i<len; ++i) {
-                    allProjectNames.push(success[i].project);
+                    if(allProjectNames.indexOf(success[i].project)===-1) {
+                        allProjectNames.push(success[i].project);
+                    }
                 }
 
                 resolve(allProjectNames);
