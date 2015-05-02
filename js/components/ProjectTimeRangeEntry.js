@@ -39,14 +39,22 @@ var ProjectTimeRangeEntry = React.createClass({
     },
 
     _onFromChanged: function(event) {
+        var newFromDate = new Date(event.target.value);
+
+        newFromDate.setTime(newFromDate.getTime() + newFromDate.getTimezoneOffset() * 60 * 1000);
+
         this.setState({
-            from: new Date(event.target.value)
+            from: newFromDate
         });
     },
 
     _onToChanged: function(event) {
+        var newToDate = new Date(event.target.value);
+
+        newToDate.setTime(newToDate.getTime() + newToDate.getTimezoneOffset() * 60 * 1000);
+
         this.setState({
-            to: new Date(event.target.value)
+            to: newToDate
         });
     },
 
