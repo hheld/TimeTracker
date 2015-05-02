@@ -1,7 +1,8 @@
 /* jshint node: true */
 
 var AppDispatcher = require('../dispatcher/AppDispatcher'),
-    AppConstants = require('../constants/AppConstants');
+    AppConstants  = require('../constants/AppConstants'),
+    pdb           = require('../utils/projectsDb');
 
 var AppActions = {
     initFromDb: function() {
@@ -23,6 +24,13 @@ var AppActions = {
             data: toDate
         });
     },
+
+    saveProjectData: function(project) {
+        pdb.upsert(project)
+            .then(function(){
+            AppActions.initFromDb();
+        });
+    }
 };
 
 module.exports = AppActions;

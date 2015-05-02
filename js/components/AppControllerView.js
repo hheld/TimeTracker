@@ -6,7 +6,8 @@ var React                   = require('react'),
     AppActions              = require('../actions/AppActions'),
     ScheduleView            = require('./ScheduleView'),
     ExistingProjectSelector = require('./ExistingProjectSelector'),
-    TimeRangeSelector       = require('./TimeRangeSelector');
+    TimeRangeSelector       = require('./TimeRangeSelector'),
+    ProjectTimeRangeEntry   = require('./ProjectTimeRangeEntry');
 
 function getAppState() {
     return {
@@ -46,6 +47,10 @@ var AppControllerView = React.createClass({
         AppActions.setToDate(toDate);
     },
 
+    _onSaveClicked: function(project) {
+        AppActions.saveProjectData(project);
+    },
+
     render: function() {
         return(
             <div>
@@ -55,6 +60,7 @@ var AppControllerView = React.createClass({
                                    to={this.state.to}
                                    fromChangeHandler={this._onFromChanged}
                                    toChangeHandler={this._onToChanged} />
+                <ProjectTimeRangeEntry onSaveHandler={this._onSaveClicked} />
             </div>
         );
     }
