@@ -57,7 +57,7 @@ var ScheduleView = React.createClass({
     },
 
     onProjectClicked: function(d) {
-        console.log('Clicked on project:', d);
+        this.props.selectedProjectHandler(d);
     }
 });
 

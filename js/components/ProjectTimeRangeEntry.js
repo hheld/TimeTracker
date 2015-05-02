@@ -22,6 +22,16 @@ var ProjectTimeRangeEntry = React.createClass({
         };
     },
 
+    componentWillReceiveProps: function(nextProps) {
+        if(nextProps.selectedProfile) {
+            this.setState({
+                projectName: nextProps.selectedProfile.project,
+                from: nextProps.selectedProfile.from,
+                to: nextProps.selectedProfile.to
+            });
+        }
+    },
+
     _onProjectNameChanged: function(event) {
         this.setState({
             projectName: event.target.value,
@@ -77,7 +87,6 @@ var ProjectTimeRangeEntry = React.createClass({
                     <label className="col-sm-2 control-label">Project name</label>
                     <div className="col-sm-3">
                         <input type="text" className="form-control"
-                               defaultValue={this.state.projectName}
                                value={this.state.projectName}
                                onChange={this._onProjectNameChanged} />
                     </div>

@@ -30,6 +30,13 @@ var AppActions = {
             .then(function(){
             AppActions.initFromDb();
         });
+    },
+
+    setSelectedProject: function(project) {
+        AppDispatcher.handleViewAction({
+            actionType: AppConstants.SET_SELECTED_PROJECT,
+            data: project
+        });
     }
 };
 

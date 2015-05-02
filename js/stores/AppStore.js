@@ -5,7 +5,15 @@ var AppDispatcher = require('../dispatcher/AppDispatcher'),
     EventEmitter  = require('events').EventEmitter,
     merge         = require('object-assign');
 
+var _store = {
+    selectedProfile: null
+};
+
 var AppStore = merge({}, EventEmitter.prototype, {
+    getSelectedProfile: function() {
+        return _store.selectedProfile;
+    },
+
     emitChange: function() {
         this.emit('change');
     },
@@ -23,6 +31,9 @@ AppStore.dispatcherToken = AppDispatcher.register(function(payload) {
     var action = payload.action;
 
     switch(action.actionType) {
+        case AppConstants.SET_SELECTED_PROJECT:
+            _store.selectedProfile = action.data;
+            break;
         default:
             return true;
     }

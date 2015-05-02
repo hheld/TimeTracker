@@ -13,7 +13,8 @@ function getAppState() {
         timeBlocks: ProjectTimeStore.timeBlocks(),
         projectNames: ProjectTimeStore.projectNames(),
         from: ProjectTimeStore.from(),
-        to: ProjectTimeStore.to()
+        to: ProjectTimeStore.to(),
+        selectedProfile: AppStore.getSelectedProfile()
     };
 }
 
@@ -50,16 +51,22 @@ var AppControllerView = React.createClass({
         AppActions.saveProjectData(project);
     },
 
+    _onProjectSelected: function(project) {
+        AppActions.setSelectedProject(project);
+    },
+
     render: function() {
         return(
             <div>
-                <ScheduleView data={this.state.timeBlocks}/>
+                <ScheduleView data={this.state.timeBlocks}
+                              selectedProjectHandler={this._onProjectSelected} />
                 <TimeRangeSelector from={this.state.from}
                                    to={this.state.to}
                                    fromChangeHandler={this._onFromChanged}
                                    toChangeHandler={this._onToChanged} />
                 <ProjectTimeRangeEntry onSaveHandler={this._onSaveClicked}
-                                       projectNames={this.state.projectNames} />
+                                       projectNames={this.state.projectNames}
+                                       selectedProfile={this.state.selectedProfile} />
             </div>
         );
     }
