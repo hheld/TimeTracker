@@ -3,6 +3,9 @@
 var React = require('react');
 
 var ExistingProjectSelector = React.createClass({
+    _onProjectSelected: function(event) {
+        this.props.selectedProject(event.target.value);
+    },
 
     render: function() {
         var options = this.props.projectNames.map(function(projectName, i) {
@@ -11,10 +14,13 @@ var ExistingProjectSelector = React.createClass({
 
         return (
             <div className="form-group">
-                <label>Project</label>
-                <select className="form-control">
-                    {options}
-                </select>
+                <label className={this.props.labelClass}>Existing Project</label>
+                <div className={this.props.selectContainerClass}>
+                    <select className={this.props.selectClass}
+                        onChange={this._onProjectSelected}>
+                        {options}
+                    </select>
+                </div>
             </div>
         );
     }

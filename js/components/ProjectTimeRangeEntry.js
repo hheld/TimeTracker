@@ -1,7 +1,8 @@
 /* jshint node: true */
 
-var React  = require('react'),
-    moment = require('moment');
+var React                   = require('react'),
+    moment                  = require('moment'),
+    ExistingProjectSelector = require('./ExistingProjectSelector');
 
 var ProjectTimeRangeEntry = React.createClass({
     statics: {
@@ -49,6 +50,12 @@ var ProjectTimeRangeEntry = React.createClass({
         });
     },
 
+    _onExistingProjectSelected: function(projectName) {
+        this.setState({
+            projectName: projectName
+        });
+    },
+
     render: function() {
         var storeButton = this.state.projectName ? <div className="form-group">
                               <div className="col-sm-offset-2 col-sm-10">
@@ -61,9 +68,18 @@ var ProjectTimeRangeEntry = React.createClass({
                 <div className="form-group">
                     <label className="col-sm-2 control-label">Project name</label>
                     <div className="col-sm-3">
-                        <input type="text" className="form-control" defaultValue={this.state.projectName} onChange={this._onProjectNameChanged} />
+                        <input type="text" className="form-control"
+                               defaultValue={this.state.projectName}
+                               value={this.state.projectName}
+                               onChange={this._onProjectNameChanged} />
                     </div>
                 </div>
+                <ExistingProjectSelector
+                    labelClass="col-sm-2 control-label"
+                    selectClass="form-control"
+                    selectContainerClass="col-sm-3"
+                    projectNames={this.props.projectNames}
+                    selectedProject={this._onExistingProjectSelected} />
                 <div className="form-group">
                     <label className="col-sm-2 control-label">From</label>
                     <div className="col-sm-3">

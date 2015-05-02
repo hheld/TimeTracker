@@ -5,7 +5,6 @@ var React                   = require('react'),
     ProjectTimeStore        = require('../stores/ProjectTimesStore'),
     AppActions              = require('../actions/AppActions'),
     ScheduleView            = require('./ScheduleView'),
-    ExistingProjectSelector = require('./ExistingProjectSelector'),
     TimeRangeSelector       = require('./TimeRangeSelector'),
     ProjectTimeRangeEntry   = require('./ProjectTimeRangeEntry');
 
@@ -55,12 +54,12 @@ var AppControllerView = React.createClass({
         return(
             <div>
                 <ScheduleView data={this.state.timeBlocks}/>
-                <ExistingProjectSelector projectNames={this.state.projectNames} />
                 <TimeRangeSelector from={this.state.from}
                                    to={this.state.to}
                                    fromChangeHandler={this._onFromChanged}
                                    toChangeHandler={this._onToChanged} />
-                <ProjectTimeRangeEntry onSaveHandler={this._onSaveClicked} />
+                <ProjectTimeRangeEntry onSaveHandler={this._onSaveClicked}
+                                       projectNames={this.state.projectNames} />
             </div>
         );
     }
