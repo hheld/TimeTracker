@@ -52,6 +52,14 @@ var ProjectTimeStore = merge({}, EventEmitter.prototype, {
 
     projectNames: function() {
         return _store.projectNames;
+    },
+
+    from: function() {
+        return _store.from;
+    },
+
+    to: function() {
+        return _store.to;
     }
 });
 
@@ -63,8 +71,16 @@ ProjectTimeStore.dispatcherToken = AppDispatcher.register(function(payload) {
             _fetchProjectDataFromDb();
             _fetchAllProjectNamesFromDb();
             return true;
+        case AppConstants.SET_FROM_DATE:
+            _store.from = new Date(action.data);
+            _fetchProjectDataFromDb();
+            return true;
+        case AppConstants.SET_TO_DATE:
+            _store.to = new Date(action.data);
+            _fetchProjectDataFromDb();
+            return true;
         default:
-        return true;
+            return true;
     }
 
     ProjectTimeStore.emitChange();
