@@ -33,6 +33,7 @@ var ScheduleView = React.createClass({
         var dispatcher = d3SchedulePlot.create(el, props, this.props.data);
 
         dispatcher.on('click:project', this.onProjectClicked);
+        dispatcher.on('click:outside', this.onProjectClicked);
 
         this.dispatcher = dispatcher;
         this.counter = 3;

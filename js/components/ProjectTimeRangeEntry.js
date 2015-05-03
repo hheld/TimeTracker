@@ -18,7 +18,8 @@ var ProjectTimeRangeEntry = React.createClass({
         return {
             projectName: null,
             from: moment().startOf('hour').toDate(),
-            to: moment().startOf('hour').add(1, 'hour').toDate()
+            to: moment().startOf('hour').add(1, 'hour').toDate(),
+            update: false
         };
     },
 
@@ -27,7 +28,12 @@ var ProjectTimeRangeEntry = React.createClass({
             this.setState({
                 projectName: nextProps.selectedProfile.project,
                 from: nextProps.selectedProfile.from,
-                to: nextProps.selectedProfile.to
+                to: nextProps.selectedProfile.to,
+                update: !!nextProps.selectedProfile._id
+            });
+        } else {
+            this.setState({
+                update: false
             });
         }
     },
@@ -42,7 +48,8 @@ var ProjectTimeRangeEntry = React.createClass({
         var newProjectData = {
             project: this.state.projectName,
             from: new Date(this.state.from),
-            to: new Date(this.state.to)
+            to: new Date(this.state.to),
+            _id: this.props.selectedProfile && this.state.update ? this.props.selectedProfile._id : null
         };
 
         this.props.onSaveHandler(newProjectData);
@@ -75,9 +82,12 @@ var ProjectTimeRangeEntry = React.createClass({
     },
 
     render: function() {
+        var storeButtonClass = this.state.update ? 'btn btn-info' : 'btn btn-primary';
+        var buttonText = this.state.update ? 'Update' : 'Save';
+
         var storeButton = this.state.projectName ? <div className="form-group">
                               <div className="col-sm-offset-2 col-sm-10">
-                                  <button type="button" className="btn btn-primary" onClick={this._onSaveClicked}>Save</button>
+                                  <button type="button" className={storeButtonClass} onClick={this._onSaveClicked}>{buttonText}</button>
                               </div>
                           </div> : null;
 

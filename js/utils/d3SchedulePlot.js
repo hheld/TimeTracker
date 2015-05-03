@@ -5,6 +5,11 @@ var d3 = require('d3'),
 
 var d3SchedulePlot = {};
 
+function deselectAll() {
+    d3.selectAll(".scheduleRect")
+        .style("stroke", null);
+}
+
 d3SchedulePlot.create = function(el, props, data) {
     var width  = props.width,
         height = props.height,
@@ -13,18 +18,22 @@ d3SchedulePlot.create = function(el, props, data) {
     width -=  margin.left + margin.right;
     height -=  margin.top + margin.bottom;
 
+    var dispatcher = new EventEmitter();
+
     var svg = d3.select(el)
                 .append('svg')
                 .attr('width', width + margin.left + margin.right)
-                .attr('height', height + margin.top + margin.bottom);
+                .attr('height', height + margin.top + margin.bottom)
+                .on('click', function() {
+                    deselectAll();
+                    dispatcher.emit('click:outside');
+                });
 
     svg.append("g")
         .attr("class", "x axis");
 
     svg.append("g")
         .attr("class", "y axis");
-
-    var dispatcher = new EventEmitter();
 
     this.update(el, props, data, dispatcher);
 
@@ -116,6 +125,9 @@ d3SchedulePlot._drawSchedules = function(el, props, data, dispatcher, scales) {
         .append("rect")
         .attr("class", "scheduleRect")
         .on('click', function(d) {
+            deselectAll();
+            d3.select(this).style("stroke", "black");
+            d3.event.stopPropagation();
             dispatcher.emit('click:project', d);
         });
 
