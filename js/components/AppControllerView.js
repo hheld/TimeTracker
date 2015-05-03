@@ -55,6 +55,10 @@ var AppControllerView = React.createClass({
         AppActions.setSelectedProject(project);
     },
 
+    _onDeleteClicked: function(id) {
+        AppActions.deleteEntry(id);
+    },
+
     render: function() {
         return(
             <div>
@@ -66,7 +70,8 @@ var AppControllerView = React.createClass({
                                    toChangeHandler={this._onToChanged} />
                 <ProjectTimeRangeEntry onSaveHandler={this._onSaveClicked}
                                        projectNames={this.state.projectNames}
-                                       selectedProfile={this.state.selectedProfile} />
+                                       selectedProfile={this.state.selectedProfile}
+                                       onDeleteHandler={this._onDeleteClicked} />
             </div>
         );
     }

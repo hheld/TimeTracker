@@ -37,6 +37,13 @@ var AppActions = {
             actionType: AppConstants.SET_SELECTED_PROJECT,
             data: project
         });
+    },
+
+    deleteEntry: function(id) {
+        pdb.remove(id)
+            .then(function() {
+            AppActions.initFromDb();
+        });
     }
 };
 

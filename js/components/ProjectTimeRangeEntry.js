@@ -81,6 +81,10 @@ var ProjectTimeRangeEntry = React.createClass({
         });
     },
 
+    _onDeleteClicked: function() {
+        this.props.onDeleteHandler(this.props.selectedProfile._id);
+    },
+
     render: function() {
         var storeButtonClass = this.state.update ? 'btn btn-info' : 'btn btn-primary';
         var buttonText = this.state.update ? 'Update' : 'Save';
@@ -90,6 +94,13 @@ var ProjectTimeRangeEntry = React.createClass({
                                   <button type="button" className={storeButtonClass} onClick={this._onSaveClicked}>{buttonText}</button>
                               </div>
                           </div> : null;
+
+        var deleteButton = this.state.projectName && this.state.update ?
+                           <div className="form-group">
+                               <div className="col-sm-offset-2 col-sm-10">
+                                   <button type="button" className="btn btn-danger" onClick={this._onDeleteClicked}>Delete</button>
+                               </div>
+                           </div> : null;
 
         return (
             <form className="form-horizontal">
@@ -124,6 +135,7 @@ var ProjectTimeRangeEntry = React.createClass({
                     </div>
                 </div>
                 {storeButton}
+                {deleteButton}
             </form>
         );
     }

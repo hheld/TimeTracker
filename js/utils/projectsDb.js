@@ -57,8 +57,19 @@ function allProjectNames() {
     });
 }
 
+function remove(id) {
+    return new Promise(function(resolve, reject) {
+        init().then(function(db) {
+            db.projects.remove(id, function() {
+                resolve();
+            });
+        });
+    });
+}
+
 module.exports = {
     upsert: upsertProject,
     find: find,
-    allProjectNames: allProjectNames
+    allProjectNames: allProjectNames,
+    remove: remove
 };
