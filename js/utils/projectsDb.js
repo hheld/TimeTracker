@@ -61,6 +61,7 @@ function remove(id) {
     return new Promise(function(resolve, reject) {
         init().then(function(db) {
             db.projects.remove(id, function() {
+                db.projects.resolveRemove(id);
                 resolve();
             });
         });
