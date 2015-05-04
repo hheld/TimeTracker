@@ -14,6 +14,11 @@ var _store = {
     projectNames: []
 };
 
+function _setToday() {
+    _store.from = moment().startOf('day').toDate();
+    _store.to = moment().endOf('day').toDate();
+}
+
 function _fetchProjectDataFromDb() {
     pdb.find({ from: _store.from,
               to: _store.to })
@@ -77,6 +82,10 @@ ProjectTimeStore.dispatcherToken = AppDispatcher.register(function(payload) {
             return true;
         case AppConstants.SET_TO_DATE:
             _store.to = new Date(action.data);
+            _fetchProjectDataFromDb();
+            return true;
+        case AppConstants.GOTO_TODAY:
+            _setToday();
             _fetchProjectDataFromDb();
             return true;
         default:

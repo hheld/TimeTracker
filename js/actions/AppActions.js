@@ -44,6 +44,12 @@ var AppActions = {
             .then(function() {
             AppActions.initFromDb();
         });
+    },
+
+    goToToday: function() {
+        AppDispatcher.handleViewAction({
+            actionType: AppConstants.GOTO_TODAY
+        });
     }
 };
 

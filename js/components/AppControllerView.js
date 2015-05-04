@@ -59,15 +59,20 @@ var AppControllerView = React.createClass({
         AppActions.deleteEntry(id);
     },
 
+    _onGoToTodayClicked: function() {
+        AppActions.goToToday();
+    },
+
     render: function() {
         return(
             <div>
-                <ScheduleView data={this.state.timeBlocks}
-                              selectedProjectHandler={this._onProjectSelected} />
                 <TimeRangeSelector from={this.state.from}
                                    to={this.state.to}
                                    fromChangeHandler={this._onFromChanged}
-                                   toChangeHandler={this._onToChanged} />
+                                   toChangeHandler={this._onToChanged}
+                                   goToTodayClicked={this._onGoToTodayClicked} />
+                <ScheduleView data={this.state.timeBlocks}
+                              selectedProjectHandler={this._onProjectSelected} />
                 <ProjectTimeRangeEntry onSaveHandler={this._onSaveClicked}
                                        projectNames={this.state.projectNames}
                                        selectedProfile={this.state.selectedProfile}

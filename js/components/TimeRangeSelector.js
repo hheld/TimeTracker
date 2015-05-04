@@ -20,27 +20,30 @@ var TimeRangeSelector = React.createClass({
         this.props.toChangeHandler(event.target.value);
     },
 
+    _onTodayBtnClicked: function() {
+        this.props.goToTodayClicked();
+    },
+
     render: function() {
         return (
-            <form className="form-horizontal">
+            <form className="form-inline">
                 <div className="form-group">
-                    <label className="col-sm-2 control-label">From</label>
-                    <div className="col-sm-3">
-                        <input type="date" className="form-control"
-                               defaultValue={TimeRangeSelector.getDate(this.props.from)}
-                               value={TimeRangeSelector.getDate(this.props.from)}
-                               onChange={this._onFromChanged} />
-                    </div>
+                    <label>View from</label>
+                    <input type="date" className="form-control"
+                           defaultValue={TimeRangeSelector.getDate(this.props.from)}
+                           value={TimeRangeSelector.getDate(this.props.from)}
+                           onChange={this._onFromChanged} />
                 </div>
                 <div className="form-group">
-                    <label className="col-sm-2 control-label">To</label>
-                    <div className="col-sm-3">
-                        <input type="date" className="form-control"
-                               defaultValue={TimeRangeSelector.getDate(this.props.to)}
-                               value={TimeRangeSelector.getDate(this.props.to)}
-                               onChange={this._onToChanged} />
-                    </div>
+                    <label>View to</label>
+                    <input type="date" className="form-control"
+                           defaultValue={TimeRangeSelector.getDate(this.props.to)}
+                           value={TimeRangeSelector.getDate(this.props.to)}
+                           onChange={this._onToChanged} />
                 </div>
+                <button type="button"
+                        className="btn btn-default"
+                        onClick={this._onTodayBtnClicked}>Today</button>
             </form>
         );
     }
