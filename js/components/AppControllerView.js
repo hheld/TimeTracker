@@ -65,18 +65,22 @@ var AppControllerView = React.createClass({
 
     render: function() {
         return(
-            <div>
-                <TimeRangeSelector from={this.state.from}
-                                   to={this.state.to}
-                                   fromChangeHandler={this._onFromChanged}
-                                   toChangeHandler={this._onToChanged}
-                                   goToTodayClicked={this._onGoToTodayClicked} />
-                <ScheduleView data={this.state.timeBlocks}
-                              selectedProjectHandler={this._onProjectSelected} />
-                <ProjectTimeRangeEntry onSaveHandler={this._onSaveClicked}
-                                       projectNames={this.state.projectNames}
-                                       selectedProfile={this.state.selectedProfile}
-                                       onDeleteHandler={this._onDeleteClicked} />
+            <div className="container">
+                <div className="panel panel-default">
+                    <div className="panel-body">
+                        <TimeRangeSelector from={this.state.from}
+                                           to={this.state.to}
+                                           fromChangeHandler={this._onFromChanged}
+                                           toChangeHandler={this._onToChanged}
+                                           goToTodayClicked={this._onGoToTodayClicked} />
+                        <ScheduleView data={this.state.timeBlocks}
+                                      selectedProjectHandler={this._onProjectSelected} />
+                        <ProjectTimeRangeEntry onSaveHandler={this._onSaveClicked}
+                                               projectNames={this.state.projectNames}
+                                               selectedProfile={this.state.selectedProfile}
+                                               onDeleteHandler={this._onDeleteClicked} />
+                    </div>
+                </div>
             </div>
         );
     }
