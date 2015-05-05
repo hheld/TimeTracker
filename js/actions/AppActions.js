@@ -50,6 +50,12 @@ var AppActions = {
         AppDispatcher.handleViewAction({
             actionType: AppConstants.GOTO_TODAY
         });
+    },
+
+    unselectProject: function() {
+        AppDispatcher.handleViewAction({
+            actionType: AppConstants.UNSELECT_PROJECT
+        });
     }
 };
 

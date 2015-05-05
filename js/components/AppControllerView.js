@@ -57,6 +57,7 @@ var AppControllerView = React.createClass({
 
     _onDeleteClicked: function(id) {
         AppActions.deleteEntry(id);
+        AppActions.unselectProject();
     },
 
     _onGoToTodayClicked: function() {

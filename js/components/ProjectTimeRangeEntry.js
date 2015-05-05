@@ -32,9 +32,7 @@ var ProjectTimeRangeEntry = React.createClass({
                 update: !!nextProps.selectedProfile._id
             });
         } else {
-            this.setState({
-                update: false
-            });
+            this.setState(this.getInitialState());
         }
     },
 

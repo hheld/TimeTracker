@@ -9,5 +9,6 @@ module.exports = keyMirror({
     SAVE_DATA: null,
     SET_SELECTED_PROJECT: null,
     DELETE_ENTRY: null,
-    GOTO_TODAY: null
+    GOTO_TODAY: null,
+    UNSELECT_PROJECT: null
 });

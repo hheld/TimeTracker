@@ -34,6 +34,9 @@ AppStore.dispatcherToken = AppDispatcher.register(function(payload) {
         case AppConstants.SET_SELECTED_PROJECT:
             _store.selectedProfile = action.data;
             break;
+        case AppConstants.UNSELECT_PROJECT:
+            _store.selectedProfile = null;
+            break;
         default:
             return true;
     }
