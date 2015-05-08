@@ -67,7 +67,10 @@ var AppControllerView = React.createClass({
     render: function() {
         return(
             <div className="container">
-                <div className="panel panel-default">
+                <div className="panel panel-primary">
+                    <div className="panel-heading">
+                        Projects and hours
+                    </div>
                     <div className="panel-body">
                         <TimeRangeSelector from={this.state.from}
                                            to={this.state.to}
