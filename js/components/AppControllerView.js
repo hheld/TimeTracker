@@ -6,7 +6,8 @@ var React                   = require('react'),
     AppActions              = require('../actions/AppActions'),
     ScheduleView            = require('./ScheduleView'),
     TimeRangeSelector       = require('./TimeRangeSelector'),
-    ProjectTimeRangeEntry   = require('./ProjectTimeRangeEntry');
+    ProjectTimeRangeEntry   = require('./ProjectTimeRangeEntry'),
+    TimeTable               = require('./TimeTable');
 
 function getAppState() {
     return {
@@ -14,7 +15,8 @@ function getAppState() {
         projectNames: ProjectTimeStore.projectNames(),
         from: ProjectTimeStore.from(),
         to: ProjectTimeStore.to(),
-        selectedProfile: AppStore.getSelectedProfile()
+        selectedProfile: AppStore.getSelectedProfile(),
+        tableData: ProjectTimeStore.getTableData()
     };
 }
 
@@ -83,6 +85,7 @@ var AppControllerView = React.createClass({
                                                projectNames={this.state.projectNames}
                                                selectedProfile={this.state.selectedProfile}
                                                onDeleteHandler={this._onDeleteClicked} />
+                        <TimeTable times={this.state.tableData} />
                     </div>
                 </div>
             </div>

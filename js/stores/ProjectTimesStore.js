@@ -38,6 +38,47 @@ function _fetchAllProjectNamesFromDb() {
     });
 }
 
+function _getTableData() {
+    function isWantedEntry(entry) {
+        return entry.from.getDate()===d.getDate() &&
+            entry.from.getMonth()===d.getMonth() &&
+            entry.from.getYear()===d.getYear();
+    }
+
+    var dailyDurations = {};
+    var allProjectNamesInTimeRange = [];
+    var days = [];
+
+    for(var d=new Date(_store.from); d<=_store.to; d.setDate(d.getDate() + 1)) {
+        var projectsInDay = _store.timeBlocks.filter(isWantedEntry);
+
+        if(projectsInDay.length>0) {
+            dailyDurations[d] = {};
+            days.push(new Date(d));
+
+            for(var i=0, len=projectsInDay.length; i<len; ++i) {
+                var projectName = projectsInDay[i].project;
+
+                if(allProjectNamesInTimeRange.indexOf(projectName)===-1) {
+                    allProjectNamesInTimeRange.push(projectName);
+                }
+
+                if(!dailyDurations[d].hasOwnProperty(projectName)) {
+                    dailyDurations[d][projectName] = 0;
+                }
+
+                dailyDurations[d][projectName] += (projectsInDay[i].to - projectsInDay[i].from) / (1000 * 3600);
+            }
+        }
+    }
+
+    return {
+        projects: allProjectNamesInTimeRange.sort(),
+        durations: dailyDurations,
+        days: days.sort(function(a, b) {return a-b;})
+    };
+}
+
 var ProjectTimeStore = merge({}, EventEmitter.prototype, {
     emitChange: function() {
         this.emit('change');
@@ -65,7 +106,9 @@ var ProjectTimeStore = merge({}, EventEmitter.prototype, {
 
     to: function() {
         return _store.to;
-    }
+    },
+
+    getTableData: _getTableData
 });
 
 ProjectTimeStore.dispatcherToken = AppDispatcher.register(function(payload) {
