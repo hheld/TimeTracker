@@ -53,7 +53,7 @@ var ScheduleView = React.createClass({
 
     render: function() {
         return(
-            <div ref='chart' />
+            <div ref='chart' className="scheduleView" />
         );
     },
 

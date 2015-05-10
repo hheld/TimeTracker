@@ -31,3 +31,7 @@
 .scheduleRect {
     fill: rgb(84, 156, 227);
 }
+
+.scheduleView {
+    overflow: auto;
+}
